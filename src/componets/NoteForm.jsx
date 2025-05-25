@@ -19,12 +19,12 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (noteToEdit) {
-        await axios.put(`http://localhost:5000/notes/${noteToEdit.id}`, {
+        await axios.put(`http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes/${noteToEdit.id}`, {
           title,
           content,
         });
       } else {
-        await axios.post('http://localhost:5000/notes', {
+        await axios.post('http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes', {
           title,
           content,
         });

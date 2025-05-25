@@ -12,7 +12,7 @@ import NoteItem from "./NoteItem";
     
     const fetchUsuarios = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/usuarios");
+            const res = await axios.get("http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/usuarios");
             setUsuarios(res.data);
         } catch (error) {
             console.error("Error al obtener usuarios:", error);
@@ -21,7 +21,7 @@ import NoteItem from "./NoteItem";
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/usuarios/${id}`);
+            await axios.delete(`http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/usuarios/${id}`);
             setUsuarios(usuarios.filter((u) => u.id !== id))
         } catch (error) {
             console.error("Error al eliminar usuario:", error);
