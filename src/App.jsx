@@ -1,44 +1,46 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NoteForm from './componets/NoteForm';
-import NoteList from './componets/NoteList';
+import NoteForm from './components/NoteForm';
+import NoteList from './components/NoteList';
 import './App.css';
 
 function App() {
-  const [notes, setNotes] = useState([]);
-  const [noteToEdit, setNoteToEdit] = useState(null);
+  const [usuarios, setUsuarios] = useState([]);
+  const [usuarioParaEditar, setUsuarioParaEditar] = useState(null);
 
-  const fetchNotes = async () => {
+  const fetchUsuarios = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/notes');
-      setNotes(response.data);
+      const res = await axios.get('http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/usuarios');
+      setUsuarios(res.data);
     } catch (error) {
-      console.error('Error al obtener las notas:',error);
+      console.error('Error al obtener usuarios:', error);
     }
   };
 
-  const deleteNote = async(id) => {
-    try {
-      await axios.delete(`http://localhost:5000/notes/${id}`);
-      fetchNotes();
-    } catch (error){
-      console.error('Error al eliminar la notas:',error);
-    }
-  };
-
-  const handleEdit = (note) => {
-    setNoteToEdit(note);
+  const handleEdit = (usuario) => {
+    setUsuarioParaEditar(usuario);
   };
 
   useEffect(() => {
-    fetchNotes();
+    fetchUsuarios();
   }, []);
 
   return (
     <div className="App">
       <h1>Notas de Usuarios</h1>
-      <NoteForm fetchNotes={fetchNotes} noteToEdit={noteToEdit} setNoteToEdit={setNoteToEdit}/>
-      <NoteList notes={notes} onDelete={deleteNote} onEdit={handleEdit}/>
+
+      <NoteForm
+        fetchUsuarios={fetchUsuarios}
+        usuarioParaEditar={usuarioParaEditar}
+        setUsuarioParaEditar={setUsuarioParaEditar}
+      />
+
+      <NoteList
+        usuarios={usuarios}
+        setUsuarios={setUsuarios}
+        fetchUsuarios={fetchUsuarios}
+        onEdit={handleEdit}
+      />
     </div>
   );
 }

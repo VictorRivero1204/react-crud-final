@@ -1,66 +1,82 @@
-import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const NoteForm = ({fetchNotes, noteToEdit, setNoteToEdit}) => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+function NoteForm({ fetchUsuarios, usuarioParaEditar, setUsuarioParaEditar }) {
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [edad, setEdad] = useState("");
 
-    useEffect(() => {
-        if(noteToEdit) {
-            setTitle(noteToEdit.title);
-            setContent(noteToEdit.content);
-        } else {
-            setTitle('');
-            setContent('');
-        }
-    }, [noteToEdit]);
+  useEffect(() => {
+    if (usuarioParaEditar) {
+      setNombre(usuarioParaEditar.nombre);
+      setCorreo(usuarioParaEditar.correo);
+      setEdad(usuarioParaEditar.edad);
+    } else {
+      setNombre("");
+      setCorreo("");
+      setEdad("");
+    }
+  }, [usuarioParaEditar]);
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (noteToEdit) {
-        await axios.put(`http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes/${noteToEdit.id}`, {
-          title,
-          content,
-        });
-      } else {
-        await axios.post('http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes', {
-          title,
-          content,
-        });
-      }
+  e.preventDefault();
+  const usuario = {
+    nombre,
+    correo,
+    edad: parseInt(edad),
+  };
 
-      setTitle('');
-      setContent('');
-      fetchNotes();
-      setNoteToEdit(null);
-
-    } catch (error) {
-        console.error('Error al guardar la nota:',error);
+  try {
+    if (usuarioParaEditar) {
+      await axios.put(
+        `http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes/${usuarioParaEditar.id}`,
+        usuario
+      );
+    } else {
+      await axios.post(
+        'http://crud-final-avanzado-env.eba-s93yfjwd.us-east-2.elasticbeanstalk.com/notes',
+        usuario
+      );
     }
+
+    setNombre("");
+    setCorreo("");
+    setEdad("");
+    setUsuarioParaEditar(null);
+    fetchUsuarios();
+
+  } catch (error) {
+    console.error("Error al enviar usuario:", error);
+  }
 };
 
-    return (
+  return (
     <form className="note-form" onSubmit={handleSubmit}>
-        <h2>{noteToEdit ? 'Editar nota' : 'Crear nueva nota'}</h2>
-        <input
+      <h2>{usuarioParaEditar ? "Editar Usuario" : "Agregar Usuario"}</h2>
+      <input
         type="text"
-        placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
         required
-        />
-    <textarea
-    placeholder="Contenido"
-    value={content}
-    onChange={(e) => setContent(e.target.value)}
-    required
-    ></textarea>
-    <button type="submit">
-        {noteToEdit ? 'Actualizar' : 'Guardar'}
-    </button>
+      />
+      <input
+        type="email"
+        placeholder="Correo"
+        value={correo}
+        onChange={(e) => setCorreo(e.target.value)}
+        required
+      />
+      <input
+        type="number"
+        placeholder="Edad"
+        value={edad}
+        onChange={(e) => setEdad(e.target.value)}
+        required
+      />
+      <button type="submit">{usuarioParaEditar ? "Actualizar" : "Agregar"}</button>
     </form>
-    );
+  );
 };
 
 
